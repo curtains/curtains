@@ -169,6 +169,13 @@ class control(cobject.cobject):
         return user.call_window_proc(self.__app_proc, handle, msg, wparam,
                                      lparam)
 
+    def _find_top_level_(self):
+        # Find the grandest parent of the control using recursion
+        if self.parent == None:
+            return self
+        else:
+            return self.parent._find_top_level_()
+
     def capture_mouse(self):
         """
            Receive all mouse events regardless of whether the mouse is over the
@@ -204,7 +211,8 @@ class control(cobject.cobject):
 
     def set_size(self, width, height):
         """Set the size of the control in pixels."""
-        return user.move_window(self, -1, -1, width, height, True)
+        pos = self.get_position()
+        return user.move_window(self, pos.x, pos.y, width, height, True)
 
     def get_size(self):
         """Return the pixel-size of the control as a named tuple."""
@@ -215,7 +223,7 @@ class control(cobject.cobject):
     def set_position(self, x, y):
         """Set the position of the control relative to its parent."""
         size = self.get_size()
-        user.move_window(self, x, y, size.width, size.height, False)
+        user.move_window(self, x, y, size.width, size.height, True)
 
     def get_position(self):
         """Get the position of the control relative to its parent."""
@@ -226,6 +234,7 @@ class control(cobject.cobject):
         point.y = rect.top
 
         top = self._find_top_level_()
+        print(top)
         user.screen_to_client(top, point)
         return cobject.position(point.x, point.y)
 

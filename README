@@ -1,0 +1,31 @@
+====================
+Curtains source code
+====================
+
+Hacking
+-------
+
+I haven't gotten around to documenting this code yet, but if you have any
+question, send them to me personally <contact@tejerodgers.com>.
+
+Run test.py to see a test window. You can modify it to play around with the
+event system, but that is pretty much all you can do at this point.
+
+Work to be done
+---------------
+
+A lot. There has to be a better place where this can actually be discussed.
+
+
+Coding standards
+----------------
+
+Official standards haven't been established yet, but here are the guidelines I've
+been using:
+
+    * wrap lines at 80 characters where possible.
+    * function names are in lower case with different words separated by _
+    * same goes for method names, variables and properties.
+    * private methods have underscores in front and behind.
+    * private classes are in all lowercase, public classes are in title case.
+      (no underscores for either)

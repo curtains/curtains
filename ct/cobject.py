@@ -46,11 +46,14 @@ class cobject(object):
             tup = (routine, mappings, cancelkey)
             self.__handlers[event].append(tup)
 
-    def detach(self, routine, event):
+    def detach(self, event, routine):
         """Detach a routine from a specific event."""
         if event in self.__handlers.keys():
-            for event_handler in self.__handler[event]:
-                event_handler.remove(routine)
+            for event_handler in self.__handlers[event]:
+                attached_routine = event_handler[0]
+                if attached_routine == routine:
+                    self.__handlers[event].remove(event_handler)
+                    break
 
     def fire(self, event, **kwargs):
         """Fire an arbitrary event. Return True if event cancellation was

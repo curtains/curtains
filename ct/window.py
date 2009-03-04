@@ -1,9 +1,11 @@
 #-*-coding: utf-8-*-
 """Window Class"""
 
+from . import cobject
 from . import container
 from . import application
 from . import user
+from . import wintypes as wt
 
 class Window(container.container):
     """Top level window control."""
@@ -81,3 +83,54 @@ class Window(container.container):
         else:
             wparam = user.ICON_SMALL
         user.send_message(self, u.WM_SETICON, wparam, self.__icon)
+
+    def restore(self):
+        self.show('normal')
+
+    def toggle_minimized(self):
+        if self.minimized:
+            self.restore()
+        else:
+            self.minimized = True
+
+    def toggle_maximized(self):
+        if self.maximized:
+            self.restore()
+        else:
+            self.maximized = True
+
+    def get_position(self):
+        rect = wt.Rect()
+        user.get_window_rect(self, rect)
+        return cobject.position(rect.left, rect.top)
+
+    def reparent(self, new_parent):
+        if self.parent == new_parent: return
+        user.set_parent(self, new_parent)
+        if new_parent != None:
+            new_parent.add_child(self)
+        if self.parent != None:
+            self.parent.remove_child(self)
+        self._control__parent = new_parent
+
+    @property
+    def minimized(self):
+        return user.is_iconic(self)
+
+    @minimized.setter
+    def minimized(self, value):
+        if value:
+            self.show('minimized')
+        else:
+            self.show('restore')
+
+    @property
+    def maximized(self):
+        return user.is_zoomed(self)
+
+    @maximized.setter
+    def maximized(self, value):
+        if value:
+            self.show('maximized')
+        else:
+            self.show('restore')
